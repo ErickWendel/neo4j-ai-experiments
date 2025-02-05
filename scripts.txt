@@ -41,3 +41,6 @@ curl http://localhost:11434/v1/chat/completions \
       }'
 
 https://medium.com/@akbhuker/how-to-integrate-deepseek-with-node-js-using-the-openai-sdk-a0b7ef8ae1e4
+https://ollama.com/library/nomic-embed-text
+https://ollama.com/blog/embedding-models
+https://js.langchain.com/docs/integrations/text_embedding/openai/
