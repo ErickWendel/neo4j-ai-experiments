@@ -1,0 +1,20 @@
+{
+  "name": "data",
+  "version": "0.0.1",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "erickwendel",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "csvtojson": "^2.0.10",
+    "neo4j-driver": "^5.28.0"
+  },
+  "engines": {
+    "node": "v22.13.1"
+  },
+  "type": "module"
+}

@@ -1,0 +1,43 @@
+state-of-js
+https://neo4j.com/developer-blog/langchain-library-full-support-neo4j-vector-index/
+https://medium.com/@therobbrennan/explore-openai-vector-embedding-with-neo4j-6ea2a40693d9#id_token=eyJhbGciOiJSUzI1NiIsImtpZCI6ImZhMDcyZjc1Nzg0NjQyNjE1MDg3YzcxODJjMTAxMzQxZTE4ZjdhM2EiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJhenAiOiIyMTYyOTYwMzU4MzQtazFrNnFlMDYwczJ0cDJhMmphbTRsamRjbXMwMHN0dGcuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJhdWQiOiIyMTYyOTYwMzU4MzQtazFrNnFlMDYwczJ0cDJhMmphbTRsamRjbXMwMHN0dGcuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJzdWIiOiIxMDE5ODkyNzU2NDc3NTMzMTM5ODciLCJlbWFpbCI6ImVyaWNrLndvcmtzcGFjZUBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwibmJmIjoxNzM4NzA0NDQ3LCJuYW1lIjoiRXJpY2sgV2VuZGVsIiwicGljdHVyZSI6Imh0dHBzOi8vbGgzLmdvb2dsZXVzZXJjb250ZW50LmNvbS9hL0FDZzhvY0x1WW1XczRpZDZJTVMtc090b3RGck9QREc0S2NJT2psMTJyd2l4N0VSWWc3dUZ3SXlYPXM5Ni1jIiwiZ2l2ZW5fbmFtZSI6IkVyaWNrIiwiZmFtaWx5X25hbWUiOiJXZW5kZWwiLCJpYXQiOjE3Mzg3MDQ3NDcsImV4cCI6MTczODcwODM0NywianRpIjoiYzBjMzZjN2Q1ZjI2OTFjNWMyZTg4ZWRlZmZhZTZkZjMwODgzOWQwMCJ9.ATnFgclMAPhPtfoAoz-kZB2dNqKPI8EVpfHH2Up7NQUEDfkSDm0v4kxXgQxfD6pKJIVrosFCTYltHp9wBWqQPLuZDufiMOa3t6GqWI_jPR_ezU-NrpLriUEXzn-dELwZ55BXpJrBbheM09tgi5X4L_orNJUck5k7n3FUfh3efRk09FFRGVe4JfxLpkkx_QL-XtV3osF5XzOkW_45btpUlZ8FvKcMNvmKaz9CWkEZSQHg_GMWRas7V5qkkS5d1ZIq9iDTSoMRL7LhV-hxCWJNYz2uVX-kFedy7zzrLUK_CwFDq1HI7UpGFM_ZZzAXhWmAbGFlZPMmbnUyBQWB_H1JXA
+https://neo4j.com/generativeai/
+https://js.langchain.com/docs/tutorials/llm_chain
+https://www.langchain.com/langchain
+
+https://www.kaggle.com/code/kerneler/starter-state-of-javascript-2018-02f22160-4
+https://2020.stateofjs.com/en-US/
+
+https://www.kaggle.com/datasets/thedevastator/hacker-news-comments-with-high-user-engagement-l
+https://github.com/neo4j-examples/nlp-knowledge-graph/tree/master
+https://js.langchain.com/v0.1/docs/modules/data_connection/experimental/graph_databases/neo4j/
+https://js.langchain.com/docs/integrations/vectorstores/neo4jvector/
+
+https://openrouter.ai/deepseek/deepseek-r1:free
+https://medium.com/data-science-in-your-pocket/deepseek-r1-free-api-58b47e849f1c
+
+curl http://localhost:11434/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer ollama" \
+  -d '{
+        "model": "deepseek-r1:1.5b",
+        "temperature": 0.7,
+        "messages": [
+          {"role": "user", "content": "Make a \"Hello World\" with go"}
+        ],
+        "stream": false
+      }'
+
+curl http://localhost:11434/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer ollama" \
+  -d '{
+        "model": "deepseek-r1",
+        "temperature": 0.7,
+        "messages": [
+          {"role": "user", "content": "Make a \"Hello World\" with go"}
+        ],
+        "stream": false
+      }'
+
+https://medium.com/@akbhuker/how-to-integrate-deepseek-with-node-js-using-the-openai-sdk-a0b7ef8ae1e4
