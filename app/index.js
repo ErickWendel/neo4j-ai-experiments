@@ -10,11 +10,6 @@ const config = {
     indexName: "vector_index",
     searchType: "vector",
     nodeLabel: "Chunk",
-    // retrievalQuery: `
-    //     RETURN node.text AS text, score, {a: node.a * 2} AS metadata
-    // `,
-    // textNodeProperty: "text",
-    // embeddingNodeProperty: "embedding",
 };
 
 // ✅ Initialize Neo4j Graph Connection
@@ -48,9 +43,18 @@ const vectorIndex = await getVectorIndex();
 
 // const question = "who is the actor that commented most?";
 const question = "what is the most popular post?";
-
-// HERE: this messes up with the above question
 // const question = "what is the less popular post";
+// const question = "Does the story with story_id = 3985069 exist?"
+// const question = "Find all comments posted by the user jpadilla_"
+// const question = "Get details of the story with story_id = 3985069, including the author and total comments."
+// const question = "Who has posted the most comments?"
+// const question = "Find the highest-ranked comment for the story with story_id = 3985069"
+// const question = "Retrieve the text of the comment with comment_id = 67890"
+// const question = "How many comments has john_doe posted?"
+// const question = "Which story has the most comments?"
+// const question = "List all users who have commented on the story with story_id = 12345"
+
+
 try {
     const response = await answerQuestion(question)
     console.log("\n📢 Final Response to User:\n", response);
@@ -101,7 +105,7 @@ async function addDocumentIfNotExists(doc) {
 function parseTemplateToData(responseTemplate, data) {
     // console.log("🔍 Parsing template with data:", responseTemplate, data);
     return Object.keys(data).reduce((prev, next) => {
-        return prev.replace(`{${next}}`, data[next]);
+        return prev.replace(`${next}`, data[next]);
     }, responseTemplate)
 }
 
@@ -153,9 +157,11 @@ async function answerQuestion(question) {
     const res = await coderModel.invoke([
         "system",
         `You are an AI that translates natural language questions into optimized Neo4j Cypher queries.
-        Only return the Cypher query, nothing else.
 
-        **Important:** the return will always add an alias with the nested key, e.g. "u.username AS username".
+        ### Rules:
+         - the return will always add an alias with the nested key, e.g. "u.username AS username".
+         - Only return the result as a valid cypher query as plain text, not markdown.
+         - **Do not** add additional text, explanations, or formatting.
 
         ### Database Schema
         ${await graph.getSchema()}
@@ -184,9 +190,21 @@ async function answerQuestion(question) {
         [
             "system",
             `
-                Generate a response **using placeholders** answering the question "${question}" that match the keys from the provided JSON.
+                Generate a **human-readable response** using placeholders that match the keys from the provided JSON.
 
-                The response should **only** return a template string using placeholders, without replacing values.
+                ### Rules:
+                - **Do not** generate SQL queries, JSON structures, or code snippets.
+                - **Do not** add additional text, explanations, or formatting.
+                - The response should be in **plain natural language**, using placeholders in the format {{key}}.
+                - **Only return the sentence** as if it were written for a human, with placeholders.
+                - The answer should be **clear and concise**, responsing to the question ${question}
+
+                ### Example:
+                if the question is "Who is the user with the most comments?" and the JSON is:
+                { "username": "tptacek", "comment_count": "435" }
+
+                Your output should be:
+                "The user {{username}} is the one who made more comments with {{comment_count}}"
 
                 Now generate the response using these placeholders: ${structuredResponse}
             `
@@ -194,7 +212,7 @@ async function answerQuestion(question) {
     ]);
 
     const message = parseTemplateToData(aiResponse.content, dbResponse.result[0])
-    // console.log("📢 Final NLP Response to User:\n", message);
+    console.log("📢 Final NLP Response to User:\n", message);
 
     console.log("💾 Storing new question-answer pair in Neo4j...");
     await addDocumentIfNotExists({
