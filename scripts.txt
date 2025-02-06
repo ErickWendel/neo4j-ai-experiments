@@ -44,3 +44,4 @@ https://medium.com/@akbhuker/how-to-integrate-deepseek-with-node-js-using-the-op
 https://ollama.com/library/nomic-embed-text
 https://ollama.com/blog/embedding-models
 https://js.langchain.com/docs/integrations/text_embedding/openai/
+https://ollama.com/library/deepseek-coder:6.7b
