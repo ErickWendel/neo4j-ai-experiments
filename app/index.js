@@ -1,8 +1,12 @@
 import { Neo4jGraph } from "@langchain/community/graphs/neo4j_graph";
 import { ChatOllama, OllamaEmbeddings } from "@langchain/ollama";
 import { Neo4jVectorStore } from "@langchain/community/vectorstores/neo4j_vector";
+import { StringOutputParser } from "@langchain/core/output_parsers";
+import { ChatPromptTemplate } from "@langchain/core/prompts";
+import { RunnableSequence } from "@langchain/core/runnables";
 import "dotenv/config";
 
+// ✅ Load Neo4j Credentials
 const config = {
     url: process.env.NEO4J_URI,
     username: process.env.NEO4J_USER,
@@ -20,6 +24,7 @@ const graph = await Neo4jGraph.initialize({
     enhancedSchema: true
 });
 
+// ✅ Initialize Models
 const coderModel = new ChatOllama({
     temperature: 0,
     maxRetries: 2,
@@ -39,189 +44,185 @@ const ollamaEmbeddings = new OllamaEmbeddings({
     baseURL: process.env.OPENAI_BASE_URL,
 });
 
-const vectorIndex = await getVectorIndex();
+const DEBUG_ENABLED = false
+// const DEBUG_ENABLED = true
+const debugLog = (...args) => DEBUG_ENABLED && console.log(...args);
 
-// const question = "who is the actor that commented most?";
-const question = "what is the most popular post?";
-// const question = "what is the less popular post";
-// const question = "Does the story with story_id = 3985069 exist?"
-// const question = "Find all comments posted by the user jpadilla_"
-// const question = "Get details of the story with story_id = 3985069, including the author and total comments."
-// const question = "Who has posted the most comments?"
-// const question = "Find the highest-ranked comment for the story with story_id = 3985069"
-// const question = "Retrieve the text of the comment with comment_id = 67890"
-// const question = "How many comments has john_doe posted?"
-// const question = "Which story has the most comments?"
-// const question = "List all users who have commented on the story with story_id = 12345"
-
-
-try {
-    const response = await answerQuestion(question)
-    console.log("\n📢 Final Response to User:\n", response);
-    process.exit(0);
-
-} catch (error) {
-    console.error("❌ Error:", error);
-    process.exit(1);
-}
-
-
-async function getVectorIndex() {
-    let neo4jVectorIndex;
-    try {
-        neo4jVectorIndex = await Neo4jVectorStore.fromExistingIndex(ollamaEmbeddings, config);
-        console.log("✅ Using existing Neo4j vector index.");
-    } catch (error) {
-        console.warn("⚠️ No existing vector index found. Creating a new one...");
-        neo4jVectorIndex = await Neo4jVectorStore.initialize(ollamaEmbeddings, config);
-    }
-
-    return neo4jVectorIndex;
-}
-
-
-async function validateCypherQuery(query) {
-    try {
-        const validationResult = await graph.query(`EXPLAIN ${query}`);
-        return validationResult ? true : false;
-    } catch (error) {
-        console.error("❌ Invalid Cypher query:", error.message);
-        return false;
-    }
-}
-
-// ✅ Function to Check and Add Documents
-async function addDocumentIfNotExists(doc) {
-    // const searchResults = await vectorIndex.similaritySearchWithScore(doc.pageContent, 1);
-    // if (searchResults.at(0).length > 0 && searchResults.at(0)[0].pageContent === doc.pageContent) {
-    //     console.log(`🚫 Skipping duplicate: "${doc.pageContent}"`);
-    // } else {
-    console.log(`✅ Adding new document: "${doc.pageContent}"`);
-    doc.id = Date.now()
-    await vectorIndex.addDocuments([doc]);
-    // }
-}
-
-function parseTemplateToData(responseTemplate, data) {
-    // console.log("🔍 Parsing template with data:", responseTemplate, data);
-    return Object.keys(data).reduce((prev, next) => {
-        return prev.replace(`${next}`, data[next]);
-    }, responseTemplate)
-}
-
-async function getResults(query) {
-    try {
-        const dbResponse = await graph.query(query);
-        if (!dbResponse || dbResponse.length === 0) {
-            console.log("⚠️ No meaningful results from Neo4j.");
-            return {
-                error: true,
-                message: "No results found.",
-            };
-        }
-
-        return {
-            error: false,
-            result: dbResponse,
-        };
-    } catch (error) {
-
-        console.error("❌ Neo4j Query Execution Failed:", error.message);
-        return {
-            error: true,
-            message: "I couldn't retrieve data from the database."
-        };
-    }
-}
-
-async function answerQuestion(question) {
-    console.log(`🔍 Searching Neo4j vector store for relevant answers...`);
-    let vectorResults = await vectorIndex.similaritySearchWithScore(question, 1);
+async function retrieveVectorSearchResults(input) {
+    debugLog("🔍 Searching Neo4j vector store...");
+    const vectorResults = await vectorIndex.similaritySearchWithScore(input.question, 1);
     const results = vectorResults?.at(0);
     const score = results?.at(1);
-    // if (results.at(0).length > 0) {
-    if (!!results?.length && score > 0.95) {
-        // console.log("🔍 Search Results:", results, score);
-        const metadata = results[0].metadata;
-        console.log("✅ Vector match found in Neo4j!", score, metadata.answerTemplate);
-        const dbResults = await getResults(metadata.query);
-        if (dbResults.error) {
-            return dbResults.message;
-        }
-        const answer = parseTemplateToData(metadata.answerTemplate, dbResults.result[0]);
-        return answer;
+
+    if (results?.length && score > 0.95) {
+        debugLog("✅ Vector match found!", score);
+        return {
+            ...input,
+            cached: true,
+            answerTemplate: results[0].metadata.answerTemplate,
+            query: results[0].metadata.query
+        };
     }
 
-    console.log("⚠️ No vector match found, generating Cypher query via AI...");
+    debugLog("⚠️ No vector match found, generating Cypher query...");
+    return {
+        ...input,
+        cached: false,
+    };
+}
+async function generateQueryIfNoCached(input) {
+    if (input.cached) return input; // Skip if we already have a cached answer
 
-    const res = await coderModel.invoke([
-        "system",
-        `You are an AI that translates natural language questions into optimized Neo4j Cypher queries.
+    const schema = await graph.getSchema();
+
+    const queryPrompt = ChatPromptTemplate.fromTemplate(`
+        You are an AI that translates natural language questions into optimized Neo4j Cypher queries.
 
         ### Rules:
-         - the return will always add an alias with the nested key, e.g. "u.username AS username".
-         - Only return the result as a valid cypher query as plain text, not markdown.
-         - **Do not** add additional text, explanations, or formatting.
+        - Always use aliases like "u.username AS username".
+        - **Return only the Cypher query** as plain text. (Do not return Cypher query as markdown)
+        - Do **not** add explanations, just the query.
 
-        ### Database Schema
-        ${await graph.getSchema()}
+        ### Database Schema:
+        {schema}
 
-        ### User Question
-        "${question}"
-        `,
-    ]);
+        ### User Question:
+        "{question}"
+    `);
+
+    const queryChain = queryPrompt.pipe(coderModel).pipe(new StringOutputParser());
+    const query = (await queryChain.invoke({ question: input.question, schema })) // 🔥 FIX: Pass schema here
+        ?.replaceAll('`', '')
+        ?.replaceAll('cypher', '')
+        ?.trim(); // 🔥 FIX: Ensure we clean up unnecessary characters
 
 
-    let query = res.content?.trim();
-    if (!query || !(await validateCypherQuery(query))) {
-        console.error("❌ Generated query is invalid:", query);
-        return "I couldn't generate a valid query.";
-    }
-
-    console.log('🤖 AI Generated Cypher Query:\n', query);
-
-    const dbResponse = await getResults(query)
-    if (dbResponse.error) {
-        return dbResponse.message;
-    }
-
-    const structuredResponse = JSON.stringify(dbResponse.result);
-    const aiResponse = await nlpModel.invoke([
-        [
-            "system",
-            `
-                Generate a **human-readable response** using placeholders that match the keys from the provided JSON.
-
-                ### Rules:
-                - **Do not** generate SQL queries, JSON structures, or code snippets.
-                - **Do not** add additional text, explanations, or formatting.
-                - The response should be in **plain natural language**, using placeholders in the format {{key}}.
-                - **Only return the sentence** as if it were written for a human, with placeholders.
-                - The answer should be **clear and concise**, responsing to the question ${question}
-
-                ### Example:
-                if the question is "Who is the user with the most comments?" and the JSON is:
-                { "username": "tptacek", "comment_count": "435" }
-
-                Your output should be:
-                "The user {{username}} is the one who made more comments with {{comment_count}}"
-
-                Now generate the response using these placeholders: ${structuredResponse}
-            `
-        ],
-    ]);
-
-    const message = parseTemplateToData(aiResponse.content, dbResponse.result[0])
-    console.log("📢 Final NLP Response to User:\n", message);
-
-    console.log("💾 Storing new question-answer pair in Neo4j...");
-    await addDocumentIfNotExists({
-        pageContent: question,
-        metadata: { answerTemplate: aiResponse.content, query },
-    })
-
-    console.log("✅ New data stored in Neo4j Vector Store!");
-    return message;
+    return { ...input, query };
 }
 
 
+async function validateAndExecuteQuery(input) {
+    if (input.cached) {
+        const dbResults = await graph.query(input.query);
+        if (!dbResults || dbResults.length === 0) {
+            debugLog("⚠️ No meaningful results from Neo4j.");
+            return { error: "No results found." };
+        }
+
+        return { ...input, dbResults };
+    }
+
+    debugLog("🤖 AI Generated Cypher Query:\n", input.query);
+    const validationResult = await graph.query(`EXPLAIN ${input.query}`);
+    if (!validationResult) {
+        debugLog("❌ Generated query is invalid:", input.query);
+        return { error: "I couldn't generate a valid query." };
+    }
+
+    const dbResults = await graph.query(input.query);
+    if (!dbResults || dbResults.length === 0) {
+        debugLog("⚠️ No meaningful results from Neo4j.");
+        return { error: "No results found." };
+    }
+
+    return { ...input, dbResults };
+}
+
+async function generateNLPResponse(input) {
+    if (input.cached) return input; // Skip if cached
+    if (input.error) return input; // Handle errors
+
+    const responsePrompt = ChatPromptTemplate.fromTemplate(`
+        Generate a **human-readable response** using placeholders that match the keys from the provided JSON.
+
+        ### Rules:
+        - **Do not** generate SQL queries, JSON structures, or code snippets.
+        - Use **placeholders** like {{key}}.
+        - **Only return a natural language sentence** answering the question "{question}".
+        - **Do not include example JSON data in the output.**
+
+        Now generate the response using these placeholders: {structuredResponse}
+    `);
+
+    const responseChain = responsePrompt.pipe(nlpModel).pipe(new StringOutputParser());
+
+    // ✅ Ensure structuredResponse is formatted as a string
+    const aiResponse = await responseChain.invoke({
+        question: input.question,
+        structuredResponse: JSON.stringify(input.dbResults[0]) // Fix: Ensure JSON data is properly formatted
+    });
+    return { ...input, answerTemplate: aiResponse };
+}
+
+
+async function cacheResult(input) {
+    if (input.cached || input.error) return input;
+
+    debugLog("💾 Storing new question-answer pair in Neo4j Vector Store...");
+    await vectorIndex.addDocuments([
+        {
+            pageContent: input.question,
+            metadata: {
+                answerTemplate: input.answerTemplate,
+                query: input.query
+            },
+        },
+    ]);
+
+    debugLog("✅ New data stored in Neo4j Vector Store!");
+    return input;
+}
+
+function parseTemplateToData(input) {
+    if (input.error) return input;
+
+    // debugLog("🔍 Parsing template with data:", input);
+    const data = input.dbResults[0]
+    return {
+        ...input,
+        answer: Object.keys(data).reduce((prev, next) => {
+            return prev.replace(`{${next}}`, data[next]);
+        }, input.answerTemplate),
+
+    }
+}
+
+// ✅ Initialize Vector Store
+const vectorIndex = await Neo4jVectorStore.fromExistingIndex(ollamaEmbeddings, config);
+
+
+// ✅ LangChain Pipeline
+const chain = RunnableSequence.from([
+    retrieveVectorSearchResults,
+    generateQueryIfNoCached,
+    validateAndExecuteQuery,
+    generateNLPResponse,
+    cacheResult,
+    parseTemplateToData,
+]);
+
+const questions = [
+    "who is the actor that commented most?",
+    "what is the most popular post?",
+    "what is the less popular post",
+    "Does the story with story_id = 3985069 exist?",
+    "Find all comments posted by the user jpadilla_",
+    "Get details of the story with story_id = 3985069, including the author and total comments.",
+    "Who has posted the most comments?",
+    "Find the highest-ranked comment for the story with story_id = 3985069",
+    "Retrieve the text of the comment with comment_id = 67890",
+    "How many comments has john_doe posted?",
+    "Which story has the most comments?",
+    "List all users who have commented on the story with story_id = 3985069",
+]
+
+
+// ✅ Execute Chain
+// for (const question of [questions[3]]) {
+for (const question of questions) {
+    const result = await chain.invoke({ question });
+    console.log("\n🎙️ Question:\n", question);
+    console.log(result.answer || result.error);
+}
+
+process.exit(0);
