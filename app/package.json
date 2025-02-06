@@ -4,6 +4,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "node --env-file .env --watch index.js",
+    "seed": "node --env-file .env --watch seed.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -21,5 +22,8 @@
     "@langchain/ollama": "^0.1.5",
     "@langchain/openai": "^0.4.2",
     "neo4j-driver": "^5.28.0"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^9.4.0"
   }
 }
