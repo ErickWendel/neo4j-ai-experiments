@@ -10,9 +10,11 @@ const config = {
     indexName: "vector_index",
     searchType: "vector",
     nodeLabel: "Chunk",
-    // textNodeProperties: ["text"],
-    textNodeProperty: "text",
-    embeddingNodeProperty: "embedding",
+    // retrievalQuery: `
+    //     RETURN node.text AS text, score, {a: node.a * 2} AS metadata
+    // `,
+    // textNodeProperty: "text",
+    // embeddingNodeProperty: "embedding",
 };
 
 // ✅ Initialize Neo4j Graph Connection
@@ -45,8 +47,10 @@ const ollamaEmbeddings = new OllamaEmbeddings({
 const vectorIndex = await getVectorIndex();
 
 // const question = "who is the actor that commented most?";
-// const question = "what is the most popular post?";
-const question = "what is the less popular post";
+const question = "what is the most popular post?";
+
+// HERE: this messes up with the above question
+// const question = "what is the less popular post";
 try {
     const response = await answerQuestion(question)
     console.log("\n📢 Final Response to User:\n", response);
@@ -84,13 +88,14 @@ async function validateCypherQuery(query) {
 
 // ✅ Function to Check and Add Documents
 async function addDocumentIfNotExists(doc) {
-    const searchResults = await vectorIndex.similaritySearch(doc.pageContent, 1);
-    if (searchResults.length > 0 && searchResults[0].pageContent === doc.pageContent) {
-        console.log(`🚫 Skipping duplicate: "${doc.pageContent}"`);
-    } else {
-        console.log(`✅ Adding new document: "${doc.pageContent}"`);
-        await vectorIndex.addDocuments([doc]);
-    }
+    // const searchResults = await vectorIndex.similaritySearchWithScore(doc.pageContent, 1);
+    // if (searchResults.at(0).length > 0 && searchResults.at(0)[0].pageContent === doc.pageContent) {
+    //     console.log(`🚫 Skipping duplicate: "${doc.pageContent}"`);
+    // } else {
+    console.log(`✅ Adding new document: "${doc.pageContent}"`);
+    doc.id = Date.now()
+    await vectorIndex.addDocuments([doc]);
+    // }
 }
 
 function parseTemplateToData(responseTemplate, data) {
@@ -127,13 +132,14 @@ async function getResults(query) {
 
 async function answerQuestion(question) {
     console.log(`🔍 Searching Neo4j vector store for relevant answers...`);
-    let vectorResults = await vectorIndex.similaritySearch(question, 1);
-    console.log("🔍 Search Results:", vectorResults);
-
-    if (vectorResults.length > 0) {
-        // if (vectorResults.length > 0 && vectorResults[0].score > 0.8) {
-        const metadata = vectorResults[0].metadata;
-        console.log("✅ Vector match found in Neo4j!");
+    let vectorResults = await vectorIndex.similaritySearchWithScore(question, 1);
+    const results = vectorResults?.at(0);
+    const score = results?.at(1);
+    // if (results.at(0).length > 0) {
+    if (!!results?.length && score > 0.95) {
+        // console.log("🔍 Search Results:", results, score);
+        const metadata = results[0].metadata;
+        console.log("✅ Vector match found in Neo4j!", score, metadata.answerTemplate);
         const dbResults = await getResults(metadata.query);
         if (dbResults.error) {
             return dbResults.message;

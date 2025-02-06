@@ -71,8 +71,9 @@ for (const doc of documents) {
 }
 
 async function makeAQuestion(question) {
-    let results = await neo4jVectorIndex.similaritySearch(question, 1);
-    console.log("🔍 Search Results:", question, results.at(0)?.metadata.answer);
+    let results = await neo4jVectorIndex.similaritySearchWithScore(question, 1);
+
+    console.log("🔍 Search Results:", question, results.at(0)?.at(1), results.at(0)?.at(0));
 }
 
 await makeAQuestion("what is the most popular post?");
