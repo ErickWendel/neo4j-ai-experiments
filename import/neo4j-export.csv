@@ -1,0 +1,154 @@
+"_id","_labels","email","id","name","phone","url","_start","_end","_type","amount","paymentDate","paymentMethod","progress","status"
+"30",":Course","","","Formação JavaScript Expert","","https://ew.academy/javascript-expert?utm_source=neo4j-vector-demo",,,,,,,,
+"31",":Course","","","Método Testes Automatizados em JavaScript","","https://ew.academy/metodo-tajs?utm_source=neo4j-vector-demo",,,,,,,,
+"32",":Course","","","Mastering Node.js Streams","","https://ew.academy/nodejsstreams?utm_source=neo4j-vector-demo",,,,,,,,
+"33",":Course","","","Recriando o Player de Vídeo da Netflix","","https://ew.academy/recriando-a-netflix?utm_source=neo4j-vector-demo",,,,,,,,
+"34",":Course","","","Criando seu Próprio App Zoom com WebRTC e WebSockets","","https://ew.academy/zoom?utm_source=neo4j-vector-demo",,,,,,,,
+"35",":Course","","","Recriando o App Clubhouse","","https://ew.academy/recriando-club-house?utm_source=neo4j-vector-demo",,,,,,,,
+"36",":Course","","","Reimaginando o Multi-Upload de Arquivos do Google Drive","","https://ew.academy/recriando-google-drive?utm_source=neo4j-vector-demo",,,,,,,,
+"37",":Course","","","Reimaginando um Rádio Musical Online Usando Spotify como Exemplo","","https://ew.academy/recriando-o-spotify?utm_source=neo4j-vector-demo",,,,,,,,
+"38",":Course","","","Machine Learning em Navegadores","","https://ew.academy/machine-learning?utm_source=neo4j-vector-demo",,,,,,,,
+"39",":Course","","","Reimaginando o Processamento de Vídeos do Maior Site do Mundo","","https://ew.academy/reimaginando-o-processamento-de-videos-do-maior-site-do-mundo?utm_source=neo4j-vector-demo",,,,,,,,
+"40",":Student","Gerry_Bechtelar61@yahoo.com","e1a15cd6-c5ef-44af-860d-4afcf3072184","Jared Skiles","(439) 805-3733 x3074","",,,,,,,,
+"41",":Student","Afton33@hotmail.com","95b128e1-4c08-40ba-9b38-fc399dc06f75","Malcolm Stehr","692.773.3241","",,,,,,,,
+"42",":Student","Bernie3@hotmail.com","843931c9-507a-4587-9752-3161a859d2b2","Francisco Auer","590.593.8935 x520","",,,,,,,,
+"43",":Student","Cordie79@gmail.com","31db9f16-f78e-45dd-bc36-02bdffeeb72e","Lamar Nitzsche PhD","1-733-971-8998","",,,,,,,,
+"44",":Student","Thea81@gmail.com","ae67ec10-3ce8-432a-bbe0-87137b420834","Aubrey Kuvalis","529.535.3633 x066","",,,,,,,,
+"45",":Student","Hipolito34@gmail.com","91232ed5-22d1-4ea6-b059-bc5c643a0b55","Alejandro Lakin","1-510-656-0155","",,,,,,,,
+"46",":Student","Dallin35@gmail.com","5647169e-4fd1-4812-8e59-b33acef75577","Dr. Edmund Hammes","1-292-698-6556 x0742","",,,,,,,,
+"47",":Student","Chyna67@hotmail.com","8172ce5f-ba78-4842-b52f-af167fbc284a","Gwendolyn Goyette","225-277-4141 x38843","",,,,,,,,
+"48",":Student","Ruth_Armstrong47@hotmail.com","ff978be1-5b8a-4652-86c2-792cefe50644","Lucia Lueilwitz-Mann","1-679-454-2072","",,,,,,,,
+"49",":Student","Effie_Jacobi23@gmail.com","a2376678-10a6-467c-92bc-a05a857e30d9","Whitney Koelpin","720-216-6295 x776","",,,,,,,,
+"50",":Student","Maverick_Moore@hotmail.com","381de83a-b064-4fc4-b6a6-c7aa56bba332","Ronald Doyle","587-453-1595 x99213","",,,,,,,,
+"51",":Student","Cameron89@yahoo.com","6d33c6c0-ab1c-47b9-9e02-6aeefa9e425a","Colleen Grimes","496.590.6735 x813","",,,,,,,,
+"52",":Student","Pearlie.Toy32@gmail.com","f5452006-f7f4-4f9d-ae57-d6fbc43da4b4","Perry Bailey DVM","(493) 267-5890","",,,,,,,,
+"53",":Student","Laurie1@yahoo.com","634608a8-beb9-4a07-b8d6-f8ad45681789","Ella Bergstrom","618.979.1594 x306","",,,,,,,,
+"54",":Student","Josefina.Murazik@hotmail.com","7a68ab79-ac4e-4b5e-b52b-46ee9d832b12","Jody DuBuque","(425) 704-4426 x5581","",,,,,,,,
+"55",":Student","Kelley68@yahoo.com","498736eb-baf4-4795-8bd1-6e526a805754","Joann Kihn","808-560-4668 x2261","",,,,,,,,
+"56",":Student","Merlin_Glover45@hotmail.com","3ec7ce5e-6828-4a42-a5c2-5da5a836ba13","Alberta Hoeger","462.915.2538 x6501","",,,,,,,,
+"57",":Student","Niko_Farrell97@gmail.com","328e1b74-78d5-4b1c-95d5-aa832930eae0","Agnes Predovic IV","(850) 564-4068 x300","",,,,,,,,
+"58",":Student","Dillan.Zulauf79@gmail.com","b699e5b6-7875-4df4-bd68-b851e093c129","Dr. Isabel Wiza","306.245.8267 x12518","",,,,,,,,
+"59",":Student","Murphy33@hotmail.com","680168ae-07fe-4a3f-9aca-dbee91985154","Wilbur Zemlak","544.227.8052 x788","",,,,,,,,
+,,,,,,,"40","35","PURCHASED","1898.1195863540452","2024-03-16T05:30:16.893Z","credit_card","","paid"
+,,,,,,,"40","32","PURCHASED","1142.6529491866131","2025-01-27T16:14:36.816Z","pix","","refunded"
+,,,,,,,"40","33","PURCHASED","1828.002343972208","2024-04-03T01:17:14.759Z","pix","","refunded"
+,,,,,,,"40","38","PURCHASED","593.2418194457283","2024-10-23T03:42:06.975Z","credit_card","","paid"
+,,,,,,,"40","39","PURCHASED","1452.465013413273","2024-04-18T13:53:20.557Z","pix","","refunded"
+,,,,,,,"40","30","PURCHASED","1088.0145354460026","2024-10-25T03:55:04.389Z","pix","","paid"
+,,,,,,,"40","31","PURCHASED","198.27361702914214","2024-05-18T02:45:51.253Z","pix","","paid"
+,,,,,,,"41","30","PURCHASED","576.2551784819849","2024-05-14T09:47:35.722Z","credit_card","","refunded"
+,,,,,,,"42","36","PURCHASED","523.4440328795191","2024-04-21T19:23:08.420Z","credit_card","","paid"
+,,,,,,,"42","37","PURCHASED","1358.9201642655157","2025-01-03T00:01:36.906Z","pix","","paid"
+,,,,,,,"42","30","PURCHASED","1894.5367333764525","2024-07-16T15:00:36.270Z","credit_card","","refunded"
+,,,,,,,"42","39","PURCHASED","1203.192023319185","2024-06-15T19:04:42.536Z","credit_card","","paid"
+,,,,,,,"43","35","PURCHASED","1439.6209513444487","2024-11-27T12:28:56.744Z","credit_card","","refunded"
+,,,,,,,"44","30","PURCHASED","337.4552821320917","2024-02-18T20:10:17.984Z","pix","","refunded"
+,,,,,,,"44","34","PURCHASED","607.6826132274005","2024-06-02T23:58:47.129Z","credit_card","","refunded"
+,,,,,,,"44","38","PURCHASED","813.6144184450078","2024-04-28T14:23:41.171Z","credit_card","","refunded"
+,,,,,,,"44","36","PURCHASED","749.7560488696797","2024-04-09T05:16:53.357Z","credit_card","","paid"
+,,,,,,,"45","35","PURCHASED","208.92634416763522","2024-09-09T00:38:23.889Z","pix","","paid"
+,,,,,,,"45","38","PURCHASED","678.4022509634464","2024-06-07T17:44:34.821Z","pix","","refunded"
+,,,,,,,"46","38","PURCHASED","1787.1690419023753","2025-01-15T19:35:15.283Z","pix","","paid"
+,,,,,,,"46","31","PURCHASED","262.9117302079886","2024-09-07T05:51:08.806Z","credit_card","","paid"
+,,,,,,,"46","39","PURCHASED","1534.4900470777816","2024-04-03T08:42:03.166Z","credit_card","","paid"
+,,,,,,,"46","36","PURCHASED","140.97578400152423","2024-09-20T07:17:03.756Z","credit_card","","paid"
+,,,,,,,"46","37","PURCHASED","1750.8969551738899","2024-07-03T10:17:21.478Z","pix","","refunded"
+,,,,,,,"46","35","PURCHASED","169.2162456616204","2024-10-25T12:25:53.501Z","pix","","refunded"
+,,,,,,,"47","38","PURCHASED","594.0343709853308","2024-11-26T02:44:41.921Z","pix","","refunded"
+,,,,,,,"47","30","PURCHASED","1868.7281653135667","2024-03-28T10:41:44.452Z","pix","","paid"
+,,,,,,,"47","32","PURCHASED","784.0957692079485","2025-01-26T05:49:12.765Z","pix","","refunded"
+,,,,,,,"47","39","PURCHASED","637.664417887694","2024-09-29T07:22:22.230Z","pix","","paid"
+,,,,,,,"47","36","PURCHASED","1207.2920030564985","2024-11-11T19:53:11.292Z","pix","","refunded"
+,,,,,,,"47","31","PURCHASED","292.2464729005854","2024-10-03T18:35:03.490Z","pix","","paid"
+,,,,,,,"47","35","PURCHASED","219.39529186560324","2025-01-15T07:59:09.178Z","pix","","paid"
+,,,,,,,"48","36","PURCHASED","543.0722909564251","2024-03-24T21:12:32.859Z","pix","","refunded"
+,,,,,,,"48","33","PURCHASED","1154.5819826310728","2024-08-10T12:00:23.184Z","credit_card","","paid"
+,,,,,,,"48","39","PURCHASED","1229.8861696168678","2025-01-29T08:28:44.955Z","credit_card","","refunded"
+,,,,,,,"48","30","PURCHASED","675.7048629083249","2024-04-18T21:09:10.752Z","pix","","refunded"
+,,,,,,,"48","31","PURCHASED","860.1108386442327","2024-12-15T23:33:54.427Z","credit_card","","paid"
+,,,,,,,"48","32","PURCHASED","1181.4143413602092","2024-11-02T19:16:59.666Z","credit_card","","paid"
+,,,,,,,"48","38","PURCHASED","1227.4529226622021","2024-07-20T09:06:05.616Z","pix","","paid"
+,,,,,,,"48","35","PURCHASED","1792.1403469347445","2024-10-29T19:07:01.487Z","pix","","refunded"
+,,,,,,,"49","31","PURCHASED","1501.576626067064","2024-04-26T06:30:30.185Z","credit_card","","refunded"
+,,,,,,,"50","30","PURCHASED","729.1253523923311","2024-06-12T03:14:54.154Z","credit_card","","refunded"
+,,,,,,,"50","37","PURCHASED","904.8026107476547","2024-11-12T22:10:52.171Z","pix","","paid"
+,,,,,,,"50","33","PURCHASED","555.3364402709288","2024-09-05T21:20:11.293Z","pix","","refunded"
+,,,,,,,"51","34","PURCHASED","1408.3968032609087","2024-03-07T10:48:04.401Z","pix","","paid"
+,,,,,,,"51","36","PURCHASED","1573.3542415333845","2024-11-10T05:42:27.031Z","credit_card","","refunded"
+,,,,,,,"51","38","PURCHASED","706.9235795534717","2024-05-19T17:19:00.152Z","credit_card","","refunded"
+,,,,,,,"52","34","PURCHASED","1806.3893917039088","2024-06-07T20:57:32.877Z","credit_card","","refunded"
+,,,,,,,"52","38","PURCHASED","21.8145133115899","2024-09-13T01:26:41.444Z","credit_card","","refunded"
+,,,,,,,"52","37","PURCHASED","674.4840924911261","2024-06-28T14:56:29.165Z","pix","","paid"
+,,,,,,,"52","32","PURCHASED","430.6031399064398","2024-04-17T17:58:51.289Z","credit_card","","refunded"
+,,,,,,,"52","35","PURCHASED","285.1852963516721","2024-09-05T06:54:21.861Z","pix","","paid"
+,,,,,,,"52","36","PURCHASED","1881.942763906366","2024-06-09T08:45:45.394Z","pix","","paid"
+,,,,,,,"53","36","PURCHASED","1448.1120622063945","2024-05-15T07:55:03.932Z","credit_card","","paid"
+,,,,,,,"53","38","PURCHASED","1279.3773010268471","2024-05-24T02:17:19.389Z","credit_card","","paid"
+,,,,,,,"53","35","PURCHASED","1779.3418992631146","2024-06-01T09:06:16.250Z","credit_card","","paid"
+,,,,,,,"53","31","PURCHASED","1861.1230021477033","2024-11-11T02:03:23.662Z","credit_card","","refunded"
+,,,,,,,"54","38","PURCHASED","1766.733749713403","2024-04-12T20:50:26.254Z","credit_card","","refunded"
+,,,,,,,"54","37","PURCHASED","814.2501920744594","2024-05-18T22:27:24.421Z","credit_card","","refunded"
+,,,,,,,"54","39","PURCHASED","1134.6177436713342","2024-09-27T16:08:29.973Z","pix","","paid"
+,,,,,,,"54","32","PURCHASED","1106.667146504789","2024-04-03T04:09:35.434Z","credit_card","","refunded"
+,,,,,,,"55","31","PURCHASED","1214.1866560266744","2024-04-27T21:28:19.588Z","credit_card","","refunded"
+,,,,,,,"55","38","PURCHASED","1969.0998612977967","2024-07-25T23:39:34.896Z","credit_card","","refunded"
+,,,,,,,"55","37","PURCHASED","62.946051655648816","2024-07-19T22:57:13.091Z","credit_card","","paid"
+,,,,,,,"55","30","PURCHASED","1466.7227590711418","2024-11-30T12:00:16.142Z","pix","","refunded"
+,,,,,,,"55","36","PURCHASED","1302.1791150463816","2024-11-25T11:10:25.943Z","pix","","refunded"
+,,,,,,,"55","33","PURCHASED","801.1255252679998","2025-01-31T23:48:37.681Z","credit_card","","refunded"
+,,,,,,,"56","31","PURCHASED","1391.1101694376296","2024-08-20T16:12:16.973Z","credit_card","","paid"
+,,,,,,,"57","30","PURCHASED","1587.6065360561877","2024-06-20T14:53:32.807Z","pix","","paid"
+,,,,,,,"57","36","PURCHASED","1912.9010778060776","2024-05-10T04:56:01.563Z","pix","","paid"
+,,,,,,,"57","34","PURCHASED","377.6059864600909","2024-10-03T21:51:00.610Z","credit_card","","paid"
+,,,,,,,"57","38","PURCHASED","783.7145505079959","2024-10-16T23:36:22.419Z","credit_card","","refunded"
+,,,,,,,"57","35","PURCHASED","857.9513268811734","2024-04-21T09:53:29.813Z","credit_card","","refunded"
+,,,,,,,"57","33","PURCHASED","1131.5605112203195","2024-02-23T03:25:33.510Z","pix","","paid"
+,,,,,,,"57","39","PURCHASED","118.08458099483809","2024-07-11T18:56:08.105Z","pix","","refunded"
+,,,,,,,"58","31","PURCHASED","360.55054562541454","2025-01-04T09:45:26.784Z","pix","","refunded"
+,,,,,,,"58","37","PURCHASED","1225.8772108763","2024-08-14T08:58:53.479Z","pix","","refunded"
+,,,,,,,"58","35","PURCHASED","1462.87002116892","2024-02-19T07:19:03.041Z","credit_card","","paid"
+,,,,,,,"58","33","PURCHASED","581.6562323399703","2024-05-29T12:58:30.824Z","pix","","paid"
+,,,,,,,"58","30","PURCHASED","1697.6784791966372","2024-07-13T17:41:53.020Z","pix","","refunded"
+,,,,,,,"59","34","PURCHASED","1919.2760747310608","2024-02-24T22:12:26.420Z","pix","","refunded"
+,,,,,,,"59","38","PURCHASED","270.367452181544","2024-02-08T15:47:26.966Z","credit_card","","refunded"
+,,,,,,,"59","39","PURCHASED","69.47478527008322","2024-03-09T07:52:49.673Z","pix","","paid"
+,,,,,,,"59","36","PURCHASED","1579.5743557973267","2024-05-13T22:31:57.725Z","pix","","refunded"
+,,,,,,,"40","35","PROGRESS","","","","88.0",""
+,,,,,,,"40","38","PROGRESS","","","","58.0",""
+,,,,,,,"40","30","PROGRESS","","","","83.0",""
+,,,,,,,"40","31","PROGRESS","","","","29.0",""
+,,,,,,,"42","36","PROGRESS","","","","23.0",""
+,,,,,,,"42","37","PROGRESS","","","","23.0",""
+,,,,,,,"42","39","PROGRESS","","","","17.0",""
+,,,,,,,"44","36","PROGRESS","","","","11.0",""
+,,,,,,,"45","35","PROGRESS","","","","31.0",""
+,,,,,,,"46","38","PROGRESS","","","","60.0",""
+,,,,,,,"46","39","PROGRESS","","","","43.0",""
+,,,,,,,"46","36","PROGRESS","","","","3.0",""
+,,,,,,,"46","31","PROGRESS","","","","10.0",""
+,,,,,,,"47","30","PROGRESS","","","","43.0",""
+,,,,,,,"47","39","PROGRESS","","","","88.0",""
+,,,,,,,"47","31","PROGRESS","","","","8.0",""
+,,,,,,,"47","35","PROGRESS","","","","80.0",""
+,,,,,,,"48","33","PROGRESS","","","","86.0",""
+,,,,,,,"48","31","PROGRESS","","","","7.0",""
+,,,,,,,"48","32","PROGRESS","","","","31.0",""
+,,,,,,,"48","38","PROGRESS","","","","79.0",""
+,,,,,,,"50","37","PROGRESS","","","","2.0",""
+,,,,,,,"51","34","PROGRESS","","","","72.0",""
+,,,,,,,"52","37","PROGRESS","","","","15.0",""
+,,,,,,,"52","35","PROGRESS","","","","53.0",""
+,,,,,,,"52","36","PROGRESS","","","","33.0",""
+,,,,,,,"53","38","PROGRESS","","","","3.0",""
+,,,,,,,"53","35","PROGRESS","","","","24.0",""
+,,,,,,,"53","36","PROGRESS","","","","9.0",""
+,,,,,,,"54","39","PROGRESS","","","","59.0",""
+,,,,,,,"55","37","PROGRESS","","","","51.0",""
+,,,,,,,"56","31","PROGRESS","","","","53.0",""
+,,,,,,,"57","30","PROGRESS","","","","89.0",""
+,,,,,,,"57","36","PROGRESS","","","","44.0",""
+,,,,,,,"57","34","PROGRESS","","","","70.0",""
+,,,,,,,"57","33","PROGRESS","","","","73.0",""
+,,,,,,,"58","35","PROGRESS","","","","50.0",""
+,,,,,,,"58","33","PROGRESS","","","","75.0",""
+,,,,,,,"59","39","PROGRESS","","","","0.0",""
