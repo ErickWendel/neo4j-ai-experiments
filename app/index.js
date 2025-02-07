@@ -5,6 +5,14 @@ import { StringOutputParser } from "@langchain/core/output_parsers";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
 import { RunnableSequence } from "@langchain/core/runnables";
 import "dotenv/config";
+import { readFile } from 'node:fs/promises'
+const promptsFolder = './prompts'
+const promptsFiles = {
+    nlpToCypher: `${promptsFolder}/nlpToCypher.md`,
+    responseTemplateFromJson: `${promptsFolder}/responseTemplateFromJson.md`,
+    context: `${promptsFolder}/context.md`,
+}
+
 
 // ✅ Load Neo4j Credentials
 const config = {
@@ -21,7 +29,7 @@ const graph = await Neo4jGraph.initialize({
     url: config.url,
     username: config.username,
     password: config.password,
-    enhancedSchema: true
+    enhancedSchema: false
 });
 
 // ✅ Initialize Models
@@ -44,8 +52,8 @@ const ollamaEmbeddings = new OllamaEmbeddings({
     baseURL: process.env.OPENAI_BASE_URL,
 });
 
-const DEBUG_ENABLED = false
-// const DEBUG_ENABLED = true
+// const DEBUG_ENABLED = false
+const DEBUG_ENABLED = true
 const debugLog = (...args) => DEBUG_ENABLED && console.log(...args);
 
 async function retrieveVectorSearchResults(input) {
@@ -55,7 +63,7 @@ async function retrieveVectorSearchResults(input) {
     const score = results?.at(1);
 
     if (results?.length && score > 0.95) {
-        debugLog("✅ Vector match found!", score);
+        debugLog(`✅ Vector match found! - score: ${score}`);
         return {
             ...input,
             cached: true,
@@ -74,28 +82,17 @@ async function generateQueryIfNoCached(input) {
     if (input.cached) return input; // Skip if we already have a cached answer
 
     const schema = await graph.getSchema();
-
-    const queryPrompt = ChatPromptTemplate.fromTemplate(`
-        You are an AI that translates natural language questions into optimized Neo4j Cypher queries.
-
-        ### Rules:
-        - Always use aliases like "u.username AS username".
-        - **Return only the Cypher query** as plain text. (Do not return Cypher query as markdown)
-        - Do **not** add explanations, just the query.
-
-        ### Database Schema:
-        {schema}
-
-        ### User Question:
-        "{question}"
-    `);
+    debugLog(`Schema`, schema);
+    const nlpTocypherPrompt = await readFile(promptsFiles.nlpToCypher, 'utf-8')
+    const context = await readFile(promptsFiles.context, 'utf-8')
+    const queryPrompt = ChatPromptTemplate.fromTemplate(nlpTocypherPrompt);
 
     const queryChain = queryPrompt.pipe(coderModel).pipe(new StringOutputParser());
-    const query = (await queryChain.invoke({ question: input.question, schema })) // 🔥 FIX: Pass schema here
-        ?.replaceAll('`', '')
-        ?.replaceAll('cypher', '')
-        ?.trim(); // 🔥 FIX: Ensure we clean up unnecessary characters
-
+    const query = (await queryChain.invoke({
+        question: input.question,
+        schema,
+        context
+    }))
 
     return { ...input, query };
 }
@@ -131,18 +128,8 @@ async function validateAndExecuteQuery(input) {
 async function generateNLPResponse(input) {
     if (input.cached) return input; // Skip if cached
     if (input.error) return input; // Handle errors
-
-    const responsePrompt = ChatPromptTemplate.fromTemplate(`
-        Generate a **human-readable response** using placeholders that match the keys from the provided JSON.
-
-        ### Rules:
-        - **Do not** generate SQL queries, JSON structures, or code snippets.
-        - Use **placeholders** like {{key}}.
-        - **Only return a natural language sentence** answering the question "{question}".
-        - **Do not include example JSON data in the output.**
-
-        Now generate the response using these placeholders: {structuredResponse}
-    `);
+    const responseTemplatePrompt = await readFile(promptsFiles.responseTemplateFromJson, 'utf-8')
+    const responsePrompt = ChatPromptTemplate.fromTemplate(responseTemplatePrompt);
 
     const responseChain = responsePrompt.pipe(nlpModel).pipe(new StringOutputParser());
 
@@ -175,17 +162,37 @@ async function cacheResult(input) {
 
 function parseTemplateToData(input) {
     if (input.error) return input;
+    if (!input.dbResults.length) return { ...input, answer: "No results found." };
 
-    // debugLog("🔍 Parsing template with data:", input);
-    const data = input.dbResults[0]
-    return {
-        ...input,
-        answer: Object.keys(data).reduce((prev, next) => {
-            return prev.replace(`{${next}}`, data[next]);
-        }, input.answerTemplate),
+    const firstEntry = input.dbResults[0];
+    const groupKey = Object.keys(firstEntry)[0];
 
-    }
+    const groupedData = input.dbResults.reduce((acc, entry) => {
+        const groupValue = entry[groupKey]?.name || entry[groupKey]; // Ensure we use a string value
+        const details = Object.entries(entry)
+            .filter(([key]) => key !== groupKey)
+            .map(([key, value]) => {
+                if (typeof value === "object" && value !== null) {
+                    return `- ${key}: ${Object.entries(value).map(([k, v]) => `${k}: ${v}`).join(", ")}`;
+                }
+                return `- ${key}: ${value}`;
+            })
+            .join("\n");
+
+        acc[groupValue] = acc[groupValue] || [];
+        acc[groupValue].push(details);
+        return acc;
+    }, {});
+
+    const answer = Object.entries(groupedData)
+        .map(([group, entries]) => `The following data is available for **${group}**:\n${entries.join("\n")}`)
+        .join("\n\n");
+
+    return { ...input, answer };
 }
+
+
+
 
 // ✅ Initialize Vector Store
 const vectorIndex = await Neo4jVectorStore.fromExistingIndex(ollamaEmbeddings, config);
@@ -202,26 +209,18 @@ const chain = RunnableSequence.from([
 ]);
 
 const questions = [
-    "who is the actor that commented most?",
-    "what is the most popular post?",
-    "what is the less popular post",
-    "Does the story with story_id = 3985069 exist?",
-    "Find all comments posted by the user jpadilla_",
-    "Get details of the story with story_id = 3985069, including the author and total comments.",
-    "Who has posted the most comments?",
-    "Find the highest-ranked comment for the story with story_id = 3985069",
-    "Retrieve the text of the comment with comment_id = 67890",
-    "How many comments has john_doe posted?",
-    "Which story has the most comments?",
-    "List all users who have commented on the story with story_id = 3985069",
+    "what are the students who progressed over 80% on a course?"
+    // "whos the student who bought only a course?",
+    ,
 ]
 
 
 // ✅ Execute Chain
-// for (const question of [questions[3]]) {
-for (const question of questions) {
+for (const question of [questions[0]]) {
+    // for (const question of questions) {
     const result = await chain.invoke({ question });
-    console.log("\n🎙️ Question:\n", question);
+    console.log("\n🎙️ Question:")
+    console.log("\n", question, "\n");
     console.log(result.answer || result.error);
 }
 

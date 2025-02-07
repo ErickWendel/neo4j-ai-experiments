@@ -1,0 +1,42 @@
+[
+    {
+        "name": "Formação JavaScript Expert",
+        "url": "https://ew.academy/javascript-expert?utm_source=neo4j-vector-demo"
+    },
+    {
+        "name": "Método Testes Automatizados em JavaScript",
+        "url": "https://ew.academy/metodo-tajs?utm_source=neo4j-vector-demo"
+    },
+    {
+        "name": "Mastering Node.js Streams",
+        "url": "https://ew.academy/nodejsstreams?utm_source=neo4j-vector-demo"
+    },
+    {
+        "name": "Recriando o Player de Vídeo da Netflix",
+        "url": "https://ew.academy/recriando-a-netflix?utm_source=neo4j-vector-demo"
+    },
+    {
+        "name": "Criando seu Próprio App Zoom com WebRTC e WebSockets",
+        "url": "https://ew.academy/zoom?utm_source=neo4j-vector-demo"
+    },
+    {
+        "name": "Recriando o App Clubhouse",
+        "url": "https://ew.academy/recriando-club-house?utm_source=neo4j-vector-demo"
+    },
+    {
+        "name": "Reimaginando o Multi-Upload de Arquivos do Google Drive",
+        "url": "https://ew.academy/recriando-google-drive?utm_source=neo4j-vector-demo"
+    },
+    {
+        "name": "Reimaginando um Rádio Musical Online Usando Spotify como Exemplo",
+        "url": "https://ew.academy/recriando-o-spotify?utm_source=neo4j-vector-demo"
+    },
+    {
+        "name": "Machine Learning em Navegadores",
+        "url": "https://ew.academy/machine-learning?utm_source=neo4j-vector-demo"
+    },
+    {
+        "name": "Reimaginando o Processamento de Vídeos do Maior Site do Mundo",
+        "url": "https://ew.academy/reimaginando-o-processamento-de-videos-do-maior-site-do-mundo?utm_source=neo4j-vector-demo"
+    }
+]
