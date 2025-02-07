@@ -15,4 +15,4 @@ You are an AI that translates natural language questions into optimized Neo4j qu
 {schema}
 
 ### User Question:
-"{question}"
+{question}
