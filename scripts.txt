@@ -32,7 +32,7 @@ curl http://localhost:11434/v1/chat/completions \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer ollama" \
   -d '{
-        "model": "deepseek-r1",
+        "model": "gemma:2b",
         "temperature": 0.7,
         "messages": [
           {"role": "user", "content": "Make a \"Hello World\" with go"}
@@ -40,9 +40,29 @@ curl http://localhost:11434/v1/chat/completions \
         "stream": false
       }'
 
+curl http://localhost:11434/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer ollama" \
+  -d '{
+        "model": "deepseek-coder:6.7b",
+        "temperature": 0.7,
+        "messages": [
+          {"role": "user", "content": "Make a \"Hello World\" with go"}
+        ],
+        "stream": false
+      }'
+
+
 https://medium.com/@akbhuker/how-to-integrate-deepseek-with-node-js-using-the-openai-sdk-a0b7ef8ae1e4
 https://ollama.com/library/nomic-embed-text
 https://ollama.com/blog/embedding-models
 https://js.langchain.com/docs/integrations/text_embedding/openai/
 https://ollama.com/library/deepseek-coder:6.7b
 https://adamcowley.co.uk/posts/natural-language-to-database-query-langgraph/
+
+docker exec -it neo4j
+neo4j-admin database dump --database=neo4j --to=/data/neo4j-backup.dump
+docker cp neo4j:/data/neo4j-backup.dump ./neo4j-backup.dump
+
+
+CALL apoc.export.json.all("/var/lib/neo4j/import/neo4j-export.csv",{useTypes:true})

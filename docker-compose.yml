@@ -9,7 +9,7 @@ services:
       - ./neo4j/data:/data
       - ./neo4j/logs:/logs
       - ./neo4j/plugins:/plugins
-      - ./import:/var/lib/neo4j/import  # Place CSV files here
+      - ./import:/var/lib/neo4j/import
     ports:
       - "7474:7474"  # Neo4j Browser
       - "7687:7687"  # Bolt Protocol (for queries)
@@ -17,3 +17,70 @@ services:
       - NEO4J_AUTH=neo4j/password
       - NEO4JLABS_PLUGINS=["apoc"]
       - NEO4J_apoc_import_file_enabled=true
+      # CALL apoc.export.csv.all("/var/lib/neo4j/import/neo4j-export.csv", {})
+      # mv /var/lib/neo4j/import/neo4j-export.csv /data/neo4j-export.csv
+      - NEO4J_apoc_export_file_enabled=true
+      - NEO4J_apoc_import_file_use__neo4j__config=true
+
+    # depends_on:
+    #   - ollama
+
+  # ollama:
+  #   image: ollama/ollama
+  #   container_name: ollama
+  #   platform: linux/arm64
+  #   restart: unless-stopped
+  #   volumes:
+  #     - ./ollama-data:/root/.ollama  # Shared volume for models
+  #   ports:
+  #     - "11434:11434"
+
+
+  # ollama-model-loader:
+  #   image: docker:latest  # 🔥 Uses Docker CLI instead of Ollama
+  #   container_name: ollama-model-loader
+  #   depends_on:
+  #     - ollama
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock  # 🔥 Allows running commands inside containers
+  #   entrypoint: ["/bin/sh", "-c"]
+  #   command:
+  #     - |
+  #       echo "⏳ Waiting for Ollama to be ready..."
+  #       until docker exec ollama ollama list >/dev/null 2>&1; do
+  #           sleep 2
+  #       done
+  #       echo "📥 Pulling models inside Ollama container..."
+  #       docker exec ollama ollama pull gemma:1b
+  #       docker exec ollama ollama pull yi-coder:1.5b
+  #       docker exec ollama ollama pull nomic-embed-text
+
+  #       echo "✅ Models downloaded. Exiting..."
+  #   restart: "no"
+
+
+    # curl http://localhost:11434/api/tags
+
+  # app:
+  #   build: ./app
+  #   container_name: app
+  #   restart: unless-stopped
+  #   ports:
+  #     - "3001:3001"
+  #   environment:
+  #     - PORT=3001
+  #     - NODE_ENV=production
+  #     - OLLAMA_BASE_URL='http://ollama:11434/api/v1'
+  #     - OPENAI_API_KEY=ollama
+
+  #     - NLP_MODEL='gemma:2b'
+  #     - CODER_MODEL='deepseek-coder:6.7b'
+
+  #     - NEO4J_USER=neo4j
+  #     - NEO4J_PASSWORD=password
+  #     - NEO4J_URI=bolt://neo4j:7687
+  #     - NEO4J_DATABASE=neo4j
+
+  #   depends_on:
+  #     - neo4j
+  #     - ollama

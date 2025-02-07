@@ -1,5 +1,6 @@
 # Logs
 neo4j/
+ollama-data/
 logs
 *.log
 npm-debug.log*
