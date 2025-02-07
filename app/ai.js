@@ -45,8 +45,8 @@ const ollamaEmbeddings = new OllamaEmbeddings({
     baseURL: process.env.OPENAI_BASE_URL,
 });
 
-const DEBUG_ENABLED = false
-// const DEBUG_ENABLED = true
+// const DEBUG_ENABLED = false
+const DEBUG_ENABLED = true
 const debugLog = (...args) => DEBUG_ENABLED && console.log(...args);
 
 export async function prompt(question) {
@@ -117,7 +117,7 @@ export async function prompt(question) {
         if (input.cached) return input; // Skip if we already have a cached answer
 
         const schema = await graph.getSchema();
-        debugLog(`Schema`, schema);
+        // debugLog(`Schema`, schema);
         const nlpTocypherPrompt = await readFile(promptsFiles.nlpToCypher, 'utf-8')
         const context = await readFile(promptsFiles.context, 'utf-8')
         const queryPrompt = ChatPromptTemplate.fromTemplate(nlpTocypherPrompt);

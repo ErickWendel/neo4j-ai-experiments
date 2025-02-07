@@ -6,7 +6,9 @@ import { prompt } from "./ai.js"
 // await prompt("what reached more than 80% progress?");
 // await prompt("what engaged has progress over 80%");
 // await prompt("how many students enrolled in the 'Machine Learning em Navegadores' course");
-await prompt("how many students asked for refund in the 'Machine Learning em Navegadores' course");
+// await prompt("how many students asked for refund in the 'Machine Learning em Navegadores' course");
+await prompt("quantos estudantes pediram reembolso no curso Mastering Node.js Streams?");
+// await prompt("quem são os estudantes que tem progresso acima de 80%??");
 // console.log(response.answer);
 
 createServer(async (req, res) => {

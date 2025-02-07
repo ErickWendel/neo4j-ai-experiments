@@ -1,7 +1,5 @@
 Generate a human-readable response using placeholders that match the keys from the provided JSON, ensuring that the answer clearly responds to the question in a natural way.
 
-
-
 ### Rules:
 - **Do not** generate SQL queries, JSON structures, or code snippets.
 - Group results dynamically based on the first key in the data.
