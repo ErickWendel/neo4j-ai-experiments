@@ -182,7 +182,7 @@ export async function prompt(question, debugLog = () => { }) {
 
         // Ensure we have a valid template
         let template = input.answerTemplate || "**Results:**\n{Results}";
-
+        console.log('template', template)
         // Extract placeholders from the template
         const placeholders = template.match(/{(.*?)}/g) || [];
 
