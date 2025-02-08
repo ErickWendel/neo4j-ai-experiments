@@ -30,7 +30,6 @@ const coderModel = new ChatOllama({
     maxRetries: 2,
     model: process.env.CODER_MODEL,
     baseURL: process.env.OPENAI_BASE_URL,
-    systemMessage: "You are a coding assistant. Do not return 'thinking' or similar placeholder texts. Only return the direct response."
 });
 
 const nlpModel = new ChatOllama({
@@ -45,11 +44,8 @@ const ollamaEmbeddings = new OllamaEmbeddings({
     baseURL: process.env.OPENAI_BASE_URL,
 });
 
-// const DEBUG_ENABLED = false
-const DEBUG_ENABLED = true
-const debugLog = (...args) => DEBUG_ENABLED && console.log(...args);
 
-export async function prompt(question) {
+export async function prompt(question, debugLog) {
 
     // ✅ Initialize Neo4j Graph Connection
     const graph = await Neo4jGraph.initialize({
@@ -96,7 +92,7 @@ export async function prompt(question) {
         const results = vectorResults?.at(0);
         const score = results?.at(1);
 
-        if (results?.length && score > 0.95) {
+        if (results?.length && score > process.env.NEO4J_VECTOR_THRESHOLD) {
             debugLog(`✅ Vector match found! - score: ${score}`);
             return {
                 ...input,
@@ -122,7 +118,7 @@ export async function prompt(question) {
         const context = await readFile(promptsFiles.context, 'utf-8')
         const queryPrompt = ChatPromptTemplate.fromTemplate(nlpTocypherPrompt);
 
-        const queryChain = queryPrompt.pipe(coderModel).pipe(new StringOutputParser());
+        const queryChain = queryPrompt.pipe(nlpModel).pipe(new StringOutputParser());
         const query = (await queryChain.invoke({
             question: input.question,
             schema,
@@ -165,7 +161,7 @@ export async function prompt(question) {
         const responseTemplatePrompt = await readFile(promptsFiles.responseTemplateFromJson, 'utf-8')
         const responsePrompt = ChatPromptTemplate.fromTemplate(responseTemplatePrompt);
 
-        const responseChain = responsePrompt.pipe(nlpModel).pipe(new StringOutputParser());
+        const responseChain = responsePrompt.pipe(coderModel).pipe(new StringOutputParser());
 
         // ✅ Ensure structuredResponse is formatted as a string
         const aiResponse = await responseChain.invoke({
