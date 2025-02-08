@@ -57,3 +57,9 @@ curl --silent  \
 -X POST \
 -d '{"prompt": "qual a quantidade de reembolsos?"}' \
 http://localhost:3002/v1/chat
+
+curl --silent  \
+-H "Content-Type: application/json" \
+-X POST \
+-d '{"prompt": "quem são os alunos que possuem progresso maior que 50%?"}' \
+http://localhost:3002/v1/chat
