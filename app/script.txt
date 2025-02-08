@@ -1,0 +1,19 @@
+ollama serve
+ollama pull gemma:2b
+ollama pull deepseek-coder:6.7b
+
+# spin up neo4j
+docker-compose up -d
+
+# restore deps
+npm ci
+
+# feed db
+npm run seed
+
+npm run dev
+
+# run twice to see  it caching
+sh request.sh
+
+

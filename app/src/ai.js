@@ -45,7 +45,7 @@ const ollamaEmbeddings = new OllamaEmbeddings({
 });
 
 
-export async function prompt(question, debugLog) {
+export async function prompt(question, debugLog = () => { }) {
 
     // ✅ Initialize Neo4j Graph Connection
     const graph = await Neo4jGraph.initialize({
@@ -59,9 +59,9 @@ export async function prompt(question, debugLog) {
     let vectorIndex;
     try {
         vectorIndex = await Neo4jVectorStore.fromExistingIndex(ollamaEmbeddings, config);
-        console.log("✅ Using existing Neo4j vector index.");
+        debugLog("✅ Using existing Neo4j vector index.");
     } catch (error) {
-        console.warn("⚠️ No existing vector index found. Creating a new one...");
+        debugLog("⚠️ No existing vector index found. Creating a new one...");
         vectorIndex = await Neo4jVectorStore.fromDocuments([], ollamaEmbeddings, config);
     }
 
@@ -77,9 +77,9 @@ export async function prompt(question, debugLog) {
     ]);
 
     const result = await chain.invoke({ question });
-    console.log("\n🎙️ Question:")
-    console.log("\n", question, "\n");
-    console.log(result.answer || result.error);
+    debugLog("\n🎙️ Question:")
+    debugLog("\n", question, "\n");
+    debugLog(result.answer || result.error);
 
     await vectorIndex.close()
     await graph.close()
@@ -118,7 +118,7 @@ export async function prompt(question, debugLog) {
         const context = await readFile(promptsFiles.context, 'utf-8')
         const queryPrompt = ChatPromptTemplate.fromTemplate(nlpTocypherPrompt);
 
-        const queryChain = queryPrompt.pipe(nlpModel).pipe(new StringOutputParser());
+        const queryChain = queryPrompt.pipe(coderModel).pipe(new StringOutputParser());
         const query = (await queryChain.invoke({
             question: input.question,
             schema,
@@ -161,16 +161,60 @@ export async function prompt(question, debugLog) {
         const responseTemplatePrompt = await readFile(promptsFiles.responseTemplateFromJson, 'utf-8')
         const responsePrompt = ChatPromptTemplate.fromTemplate(responseTemplatePrompt);
 
-        const responseChain = responsePrompt.pipe(coderModel).pipe(new StringOutputParser());
+        const responseChain = responsePrompt.pipe(nlpModel).pipe(new StringOutputParser());
 
         // ✅ Ensure structuredResponse is formatted as a string
         const aiResponse = await responseChain.invoke({
             question: input.question,
             structuredResponse: JSON.stringify(input.dbResults[0]) // Fix: Ensure JSON data is properly formatted
         });
+
         return { ...input, answerTemplate: aiResponse };
     }
+    function parseTemplateToData(input) {
+        if (input.error) return input;
+        if (!input.dbResults.length) {
+            return {
+                ...input,
+                answer: "I'm sorry, but I couldn't find any relevant information."
+            };
+        }
 
+        // Ensure we have a valid template
+        let template = input.answerTemplate || "**Results:**\n{Results}";
+
+        // Extract placeholders from the template
+        const placeholders = template.match(/{(.*?)}/g) || [];
+
+        // Extract the static part (before the first placeholder)
+        const [staticHeader, dynamicTemplate] = template.split("\n\n", 2);
+
+        // Process each entry and replace placeholders
+        const formattedEntries = input.dbResults.map(entry => {
+            let formattedEntry = dynamicTemplate || template; // Use the part after the first newline
+
+            placeholders.forEach(placeholder => {
+                const key = placeholder.replace(/{|}/g, ""); // Remove { }
+                let value = entry[key];
+
+                // Convert objects into readable format
+                if (typeof value === "object" && value !== null) {
+                    value = Object.entries(value).map(([k, v]) => `${k}: ${v}`).join(", ");
+                }
+
+                // Replace placeholder with actual value
+                formattedEntry = formattedEntry.replace(new RegExp(placeholder, "g"), value ?? "");
+            });
+
+            return formattedEntry; // Each entry gets its own formatted block
+        });
+
+        // Join all formatted entries while keeping the static header only once
+        const formattedResponse = staticHeader + "\n\n" + formattedEntries.join("\n\n");
+
+        debugLog("🎙️ Answer:", formattedResponse);
+        return { ...input, answer: formattedResponse };
+    }
     async function cacheResult(input) {
         if (input.cached || input.error) return input;
 
@@ -189,40 +233,6 @@ export async function prompt(question, debugLog) {
         return input;
     }
 
-    function parseTemplateToData(input) {
-        if (input.error) return input;
-        if (!input.dbResults.length) return { ...input, answer: "No results found." };
 
-        const firstEntry = input.dbResults[0];
-        const groupKey = Object.keys(firstEntry)[0];
 
-        const groupedData = input.dbResults.reduce((acc, entry) => {
-            const groupValue = entry[groupKey]?.name || entry[groupKey]; // Ensure we use a string value
-            const details = Object.entries(entry)
-                .filter(([key]) => key !== groupKey)
-                .map(([key, value]) => {
-                    if (typeof value === "object" && value !== null) {
-                        return `- ${key}: ${Object.entries(value).map(([k, v]) => `${k}: ${v}`).join(", ")}`;
-                    }
-                    return `- ${key}: ${value}`;
-                })
-                .join("\n");
-
-            acc[groupValue] = acc[groupValue] || [];
-            acc[groupValue].push(details);
-            return acc;
-        }, {});
-
-        const answer = Object.entries(groupedData)
-            .map(([group, entries]) => `${group} \n${entries.join("\n")}`)
-            .join("\n\n");
-
-        return { ...input, answer };
-    }
 }
-
-const questions = [
-    "what are the students who progressed over 80% on a course?"
-    // "whos the student who bought only a course?",
-    ,
-]

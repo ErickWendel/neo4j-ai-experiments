@@ -21,14 +21,14 @@ const debugLog = (...args) => {
 // await prompt("quem são os estudantes que tem progresso acima de 80%??");
 // await prompt("qual estudante tem progresso abaixo de 80%?");
 // await prompt("quem progrediu acima de 80% ?");
-await prompt("quem progrediu abaixo de 80% ?", debugLog);
+await prompt("quantos reembolsos tiveram?", debugLog);
 
 
 createServer(async (request, response) => {
     try {
         if (request.url === '/v1/chat' && request.method === 'POST') {
             const data = JSON.parse(await once(request, 'data'))
-            logger("🔹 Received AI Prompt:", data.prompt);
+            debugLog("🔹 Received AI Prompt:", data.prompt);
 
             const aiResponse = await prompt(data.prompt, debugLog);
 
@@ -46,3 +46,8 @@ createServer(async (request, response) => {
     }
 
 }).listen(process.env.PORT || 3002, () => console.log("🚀 AI Backend running on port 3001"));
+
+['uncatchException', 'unhandledRejection'].forEach(event => process.on(event, error => {
+    console.error("❌ Unhandled Error:", error.stack);
+    process.exit(1);
+}));

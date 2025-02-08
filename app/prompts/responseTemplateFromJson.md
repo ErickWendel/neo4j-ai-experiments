@@ -1,4 +1,4 @@
-Generate a human-readable response using placeholders that match the keys from the provided JSON, ensuring that the answer clearly responds to the question in a natural way.
+Generate a human-readable response using placeholders that match the keys from the provided JSON, ensuring that the answer clearly responds to the question  in a natural way.
 
 ### Rules:
 - **Do not** generate SQL queries, JSON structures, or code snippets.
@@ -6,6 +6,9 @@ Generate a human-readable response using placeholders that match the keys from t
 - Use placeholders **for each field** dynamically.
 - **Do not include example JSON data in the output.**
 - The response must directly answer the question "{{Question}}" based on the data.
+
+### Question
+{question}
 
 ### Example:
 If the input contains multiple entries for different categories, the output should be formatted as:

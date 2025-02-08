@@ -37,8 +37,8 @@ const progressRecords = salesRecords
     }));
 
 async function insertData() {
-    await session.run(`MATCH (n) DETACH DELETE n`);
-    console.log("🧹 Database cleared!");
+    // await session.run(`MATCH (n) DETACH DELETE n`);
+    // console.log("🧹 Database cleared!");
 
     await session.run(
         `UNWIND $batch AS row

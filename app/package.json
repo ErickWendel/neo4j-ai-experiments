@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "dev": "node --env-file .env --watch index.js",
+    "dev": "node --env-file .env --watch src/index.js",
     "seed": "node --env-file .env --watch data/seed.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
