@@ -2,8 +2,8 @@ import { createServer } from "node:http"
 import { once } from "node:events"
 import { prompt } from "./ai.js"
 
-const DEBUG_ENABLED = false
-// const DEBUG_ENABLED = true
+// const DEBUG_ENABLED = false
+const DEBUG_ENABLED = true
 const debugLog = (...args) => {
     if (!DEBUG_ENABLED) return
 
@@ -12,7 +12,7 @@ const debugLog = (...args) => {
     // response.write(msg.toString() + "\n");
 }
 
-// await prompt("what student is over 80% progress?", debugLog);
+await prompt("what student is over 80% progress?", debugLog);
 // await prompt("what reached more than 80% progress?", debugLog);
 // await prompt("what engaged has progress over 80%", debugLog);
 // await prompt("how many students enrolled in the 'Machine Learning em Navegadores' course", debugLog);
@@ -20,7 +20,7 @@ const debugLog = (...args) => {
 // await prompt("quantos estudantes pediram reembolso no curso Mastering Node.js Streams?", debugLog);
 // await prompt("quem são os estudantes que tem progresso acima de 80%??", debugLog);
 // await prompt("qual estudante tem progresso abaixo de 80%?", debugLog);
-await prompt("quem progrediu acima de 80% ?", debugLog);
+// await prompt("quem progrediu acima de 80% ?", debugLog);
 await prompt("quantos reembolsos tiveram?", debugLog);
 
 

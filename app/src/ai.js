@@ -29,19 +29,19 @@ const coderModel = new ChatOllama({
     temperature: 0,
     maxRetries: 2,
     model: process.env.CODER_MODEL,
-    baseURL: process.env.OPENAI_BASE_URL,
+    baseURL: process.env.OLLAMA_BASE_URL,
 });
 
 const nlpModel = new ChatOllama({
     temperature: 0,
     maxRetries: 2,
     model: process.env.NLP_MODEL,
-    baseURL: process.env.OPENAI_BASE_URL,
+    baseURL: process.env.OLLAMA_BASE_URL,
 });
-
+console.log('process.env.OLLAMA_EMBEDDINGS_URL', process.env.OLLAMA_BASE_URL)
 const ollamaEmbeddings = new OllamaEmbeddings({
     model: "nomic-embed-text",
-    baseURL: process.env.OPENAI_BASE_URL,
+    baseUrl: process.env.OLLAMA_BASE_URL,
 });
 
 
@@ -56,7 +56,6 @@ export async function prompt(question, debugLog = () => { }) {
     });
 
     const vectorIndex = await Neo4jVectorStore.fromExistingGraph(ollamaEmbeddings, config);
-
     // ✅ LangChain Pipeline
     const chain = RunnableSequence.from([
         retrieveVectorSearchResults,
@@ -202,7 +201,7 @@ export async function prompt(question, debugLog = () => { }) {
         // Join all formatted entries while keeping the static header only once
         const formattedResponse = staticHeader + "\n\n" + formattedEntries.join("\n\n");
 
-        console.log("🎙️ Answer:", formattedResponse);
+        // console.log("🎙️ Answer:", formattedResponse);
         return { ...input, answer: formattedResponse };
     }
     async function cacheResult(input) {
