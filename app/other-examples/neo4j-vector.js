@@ -29,16 +29,19 @@ const neo4jVectorIndex = await Neo4jVectorStore.fromExistingGraph(ollamaEmbeddin
 
 // ✅ Documents to Store in Neo4j
 const documents = [
-    { pageContent: "who is the actor that commented most?", metadata: { answer: "the actor is Erick" } },
-    { pageContent: "who most commented post?", metadata: { answer: "lorem ipsum is the most commented" } },
-    { pageContent: "who least commented post?", metadata: { answer: "chat hey is the least commented" } },
+    { pageContent: "the author who commented most is Erick", metadata: {} },
+    { pageContent: "the less active author is Ana", metadata: {} },
+    { pageContent: "the post abc is the one who received less comments", metadata: {} },
+    { pageContent: "the post ewacademy is the one who received more comments", metadata: {} },
 ];
 
 // ✅ Function to Check and Add Documents
 async function addDocumentIfNotExists(doc) {
-    const searchResults = await neo4jVectorIndex.similaritySearch(doc.pageContent, 1);
-    console.log("🔍 Search Results:", searchResults);
-    if (searchResults.length > 0 && searchResults[0].pageContent === '\ntext: '.concat(doc.pageContent)) {
+    const searchResults = await neo4jVectorIndex.similaritySearchWithScore(doc.pageContent, 1);
+    const score = searchResults.at(0)?.at(0)
+    const item = searchResults.at(0)?.at(1)
+    console.log("🔍 Search Results:", searchResults, score);
+    if (score > 0.9 && item?.pageContent === '\ntext: '.concat(doc.pageContent)) {
         console.log(`🚫 Skipping duplicate: "${doc.pageContent}"`);
     } else {
         console.log(`✅ Adding new document: "${doc.pageContent}"`);
@@ -57,10 +60,10 @@ async function makeAQuestion(question) {
     console.log("🔍 Search Results:", question, results.at(0)?.at(1), results.at(0)?.at(0));
 }
 
-await makeAQuestion("what is the most popular post?");
-await makeAQuestion("what is the less popular post?");
-await makeAQuestion("what is top post?");
-await makeAQuestion("what is bottom post?");
+await makeAQuestion("which one is the most popular post?");
+await makeAQuestion("which one is the less popular post?");
+await makeAQuestion("which one is top post?");
+await makeAQuestion("which one is worst post?");
 
 // ✅ Close Neo4j Connection
 await neo4jVectorIndex.close();
