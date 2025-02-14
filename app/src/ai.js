@@ -18,9 +18,9 @@ const config = {
     url: process.env.NEO4J_URI,
     username: process.env.NEO4J_USER,
     password: process.env.NEO4J_PASSWORD,
-    indexName: "vector_index",
+    indexName: "agent_index",
     searchType: "vector",
-    text_node_properties: ["question"],
+    textNodeProperties: ["question"],
     nodeLabel: "Chunk",
 };
 
@@ -53,18 +53,9 @@ export async function prompt(question, debugLog = () => { }) {
         username: config.username,
         password: config.password,
         enhancedSchema: false,
-        text_node_properties: config.text_node_properties,
     });
 
-    let vectorIndex;
-    try {
-        vectorIndex = await Neo4jVectorStore.fromExistingIndex(ollamaEmbeddings, config);
-        debugLog("✅ Using existing Neo4j vector index.");
-    } catch (error) {
-        debugLog("⚠️ No existing vector index found. Creating a new one...");
-        vectorIndex = await Neo4jVectorStore.fromDocuments([], ollamaEmbeddings, config);
-    }
-
+    const vectorIndex = await Neo4jVectorStore.fromExistingGraph(ollamaEmbeddings, config);
 
     // ✅ LangChain Pipeline
     const chain = RunnableSequence.from([
@@ -182,7 +173,6 @@ export async function prompt(question, debugLog = () => { }) {
 
         // Ensure we have a valid template
         let template = input.answerTemplate || "**Results:**\n{Results}";
-        console.log('template', template)
         // Extract placeholders from the template
         const placeholders = template.match(/{(.*?)}/g) || [];
 
@@ -212,7 +202,7 @@ export async function prompt(question, debugLog = () => { }) {
         // Join all formatted entries while keeping the static header only once
         const formattedResponse = staticHeader + "\n\n" + formattedEntries.join("\n\n");
 
-        debugLog("🎙️ Answer:", formattedResponse);
+        console.log("🎙️ Answer:", formattedResponse);
         return { ...input, answer: formattedResponse };
     }
     async function cacheResult(input) {
@@ -232,7 +222,4 @@ export async function prompt(question, debugLog = () => { }) {
         debugLog("✅ New data stored in Neo4j Vector Store!");
         return input;
     }
-
-
-
 }
