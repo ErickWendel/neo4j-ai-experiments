@@ -17,7 +17,7 @@ await prompt("what student is over 80% progress?", debugLog);
 // await prompt("what engaged has progress over 80%", debugLog);
 // await prompt("how many students enrolled in the 'Machine Learning em Navegadores' course", debugLog);
 // await prompt("how many students asked for refund in the 'Machine Learning em Navegadores' course", debugLog);
-// await prompt("quantos estudantes pediram reembolso no curso Mastering Node.js Streams?", debugLog);
+await prompt("quantos estudantes pediram reembolso no curso Mastering Node.js Streams?", debugLog);
 // await prompt("quem são os estudantes que tem progresso acima de 80%??", debugLog);
 // await prompt("qual estudante tem progresso abaixo de 80%?", debugLog);
 // await prompt("quem progrediu acima de 80% ?", debugLog);

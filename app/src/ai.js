@@ -38,7 +38,7 @@ const nlpModel = new ChatOllama({
     model: process.env.NLP_MODEL,
     baseURL: process.env.OLLAMA_BASE_URL,
 });
-console.log('process.env.OLLAMA_EMBEDDINGS_URL', process.env.OLLAMA_BASE_URL)
+
 const ollamaEmbeddings = new OllamaEmbeddings({
     model: "nomic-embed-text",
     baseUrl: process.env.OLLAMA_BASE_URL,
