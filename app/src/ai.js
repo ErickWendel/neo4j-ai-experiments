@@ -4,7 +4,7 @@ import { Neo4jVectorStore } from "@langchain/community/vectorstores/neo4j_vector
 import { StringOutputParser } from "@langchain/core/output_parsers";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
 import { RunnableSequence } from "@langchain/core/runnables";
-import "dotenv/config";
+
 import { readFile } from 'node:fs/promises'
 const promptsFolder = './prompts'
 const promptsFiles = {
