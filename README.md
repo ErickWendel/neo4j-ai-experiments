@@ -1,7 +1,10 @@
 # Neo4j AI-Powered Query System
 
 ## Overview
+
 This project integrates Neo4j with AI models to generate Cypher queries from natural language prompts. It utilizes local AI models for natural language processing and a vector database approach for efficient querying.
+
+This is the source code shown on my [video tutorial](https://ewbr.cc/rag-ai-neo4j), consider watching it first!
 
 ## Folder Structure
 ```
