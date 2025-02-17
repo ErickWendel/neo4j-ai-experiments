@@ -21,7 +21,7 @@ const debugLog = (...args) => {
 // await prompt("quem são os estudantes que tem progresso acima de 80%??", debugLog);
 // await prompt("qual estudante tem progresso abaixo de 80%?", debugLog);
 // await prompt("quem progrediu acima de 80% ?", debugLog);
-await prompt("quantos reembolsos tiveram?", debugLog);
+await prompt("quantos vendas tiveram?", debugLog);
 
 
 createServer(async (request, response) => {
