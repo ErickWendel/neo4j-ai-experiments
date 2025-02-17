@@ -10,7 +10,7 @@
   },
   "keywords": [],
   "author": "erickwendel",
-  "license": "ISC",
+  "license": "MIT",
   "description": "",
   "engines": {
     "node": "v22.13.1"
